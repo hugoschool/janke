@@ -13,8 +13,11 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
+      - name: Install web-ext
+        run: npm install --global web-ext
+
       - name: Make extensions
-        run: make all
+        run: make release MOZILLA_API_KEY=${{ secrets.MOZILLA_API_KEY }} MOZILLA_API_SECRET=${{ secrets.MOZILLA_API_SECRET }}
 
       - name: Create release
         uses: softprops/action-gh-release@aec2ec56f94eb8180ceec724245f64ef008b89f5 # v2.4.0

@@ -27,15 +27,16 @@ dev:	firefox chromium
 
 .PHONY: release
 release:	sign-firefox chromium
-	cp $(SIGNED_FOLDER)/janke-*.zip $(FIREFOX_BIN)
 
 .PHONY:	firefox
 firefox:	$(FIREFOX_BIN)
 
 .PHONY:	sign-firefox
 sign-firefox:
-	$(WEB_EXT) sign --channel unlisted --approval-timeout 0 --no-input \
+	$(WEB_EXT) build
+	-$(WEB_EXT) sign --channel unlisted --approval-timeout 0 --no-input \
 	--api-key $(MOZILLA_API_KEY) --api-secret $(MOZILLA_API_SECRET)
+	-mv $(SIGNED_FOLDER)/janke-*.zip $(FIREFOX_BIN)
 
 $(FIREFOX_BIN):	$(SRC)
 	zip -r -FS $(FIREFOX_BIN) $^
