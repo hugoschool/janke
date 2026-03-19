@@ -1,0 +1,27 @@
+{
+    "manifest_version": 3,
+    "name": "JankE",
+    "version": "1.0",
+    "description": "Extension that adds Epitech specific features to Jenkins",
+    "icons": {
+        "32": "icons/icon-32.png",
+        "64": "icons/icon-64.png",
+        "128": "icons/icon-128.png"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://jenkins.epitest.eu/*"
+            ],
+            "js": [
+                "src/index.js"
+            ],
+            "run_at": "document_end"
+        }
+    ],
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "hugo1.arnal@epitech.eu"
+        }
+    }
+}
