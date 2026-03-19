@@ -1,3 +1,7 @@
+WEB_EXT	?=	web-ext
+
+SIGNED_FOLDER	:=	web-ext-artifacts
+
 SRC	:=	$(shell \
 			find . -name "*" -type f \
 			-not -name "Makefile" \
@@ -5,8 +9,10 @@ SRC	:=	$(shell \
 			-not -name "*.xpi" \
 			-not -name "*.zip" \
 			-not -name ".gitignore" \
+			-not -name ".amo-upload-uuid" \
 			\
 			-not -path "./.git*" \
+			-not -path "./$(SIGNED_FOLDER)*" \
 		)
 
 FIREFOX_BIN	:=	JankE-firefox.xpi
@@ -16,11 +22,20 @@ CHROMIUM_BIN	:=	JankE-chromium.zip
 default:
 	@echo "Please use make firefox or make chromium depending on your browser"
 
-.PHONY: all
-all:	firefox chromium
+.PHONY: dev
+dev:	firefox chromium
+
+.PHONY: release
+release:	sign-firefox chromium
+	cp $(SIGNED_FOLDER)/janke-*.zip $(FIREFOX_BIN)
 
 .PHONY:	firefox
 firefox:	$(FIREFOX_BIN)
+
+.PHONY:	sign-firefox
+sign-firefox:
+	$(WEB_EXT) sign --channel unlisted --approval-timeout 0 --no-input \
+	--api-key $(MOZILLA_API_KEY) --api-secret $(MOZILLA_API_SECRET)
 
 $(FIREFOX_BIN):	$(SRC)
 	zip -r -FS $(FIREFOX_BIN) $^
