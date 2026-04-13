@@ -22,14 +22,14 @@ all:	firefox chromium
 .PHONY:	firefox
 firefox:	$(FIREFOX_BIN)
 
-$(FIREFOX_BIN):
-	zip -r -FS $(FIREFOX_BIN) $(SRC)
+$(FIREFOX_BIN):	$(SRC)
+	zip -r -FS $(FIREFOX_BIN) $^
 
 .PHONY:	chromium
 chromium:	$(CHROMIUM_BIN)
 
-$(CHROMIUM_BIN):
-	zip -r -FS $(CHROMIUM_BIN) $(SRC)
+$(CHROMIUM_BIN): $(SRC)
+	zip -r -FS $(CHROMIUM_BIN) $^
 
 .PHONY:	clean
 clean:
