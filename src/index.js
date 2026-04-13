@@ -27,12 +27,14 @@ function waitForElem(selector) {
     });
 }
 
-function getGitHubLink(url) {
-    return fetch(url)
-        .then(response => response.text())
-        .then(response => {
-            return GITHUB_LINK_REGEX.exec(response)[0];
-        });
+async function fetchFromGitHubLink(url) {
+    const response = await fetch(url);
+    const text = await response.text();
+    return text;
+}
+
+function parseGitHubLink(content) {
+    return GITHUB_LINK_REGEX.exec(content)[0];
 }
 
 function createGitHubButton(githubLink) {
@@ -62,11 +64,12 @@ async function addGitHubButton() {
     waitForElem("#jenkins-build-history > div > div > a").then((latestBuild) => {
         const consoleTextUrl = latestBuild.href + "Text";
 
-        getGitHubLink(consoleTextUrl).then((link) => {
-            if (!link)
-                return;
+        fetchFromGitHubLink(consoleTextUrl).then((content) => {
+            let link = parseGitHubLink(content);
 
-            createGitHubButton(link);
+            if (link) {
+                createGitHubButton(link);
+            }
         });
     });
     return;
