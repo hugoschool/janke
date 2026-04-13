@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "JankE",
-    "version": "1.0",
+    "version": "1.1.0",
     "description": "Extension that adds Epitech specific features to Jenkins",
     "icons": {
         "32": "icons/icon-32.png",
