@@ -5,6 +5,7 @@ Extension that adds Epitech specific features to Jenkins
 ## Features
 
 - GitHub Link button on a Job
+- Git Hash that goes directly to the delivery commit
 
 ## Install (from Release)
 
