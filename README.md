@@ -7,30 +7,15 @@ Extension that adds Epitech specific features to Jenkins
 - GitHub Link button on a Job
 - Git Hash that goes directly to the delivery commit
 
-## Install (from Release)
+## Install
 
-Go to the releases tab and grab the latest release.
+1. Download an extension that allows user scripts:
+- Tampermonkey:
+  - [Chrome](https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
 
-If you're on Firefox:
-- First of all, make sure to [allow unsigned extensions](https://support.mozilla.org/en-US/kb/add-on-signing-in-firefox#w_what-are-my-options-if-i-want-to-use-an-unsigned-add-on-advanced-users).
-- It should just prompt you to install the extension when pressing on the .xpi.
-- If it doesn't, download the .xpi and go to your extensions then click the little gear and Install Addon From File.
+    Once the extension is downloaded, restart your browser and go to the extension settings, then enable the "Allow User Scripts" option.
 
-If you're on Chromium:
-- download the .zip and go to your extensions
-- Enable developer mode, then Load unpacked and put in the .zip file.
+  - [Firefox](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)
 
-## Local installation
-
-Use make with your specific platform:
-
-```sh
-make chromium
-make firefox
-```
-
-Or make for all platforms:
-
-```sh
-make all
-```
+2. Navigate to https://hugoschool.github.io/janke/janke.user.js
+3. Press the Install button
