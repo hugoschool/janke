@@ -6,6 +6,11 @@ on:
       - '*'
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   release_extension:
     name: Release Extension
@@ -13,19 +18,31 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - name: Install web-ext
-        run: npm install --global web-ext
+      - name: Create the assets for GitHub Pages
+        run: |
+          mkdir ./build/
+          cp src/janke.user.js build/
+          cp -r icons/ build/
 
-      - name: Make extensions
-        run: make release MOZILLA_API_KEY=${{ secrets.MOZILLA_API_KEY }} MOZILLA_API_SECRET=${{ secrets.MOZILLA_API_SECRET }}
+      - name: Setup Pages
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: ./build/
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0
 
       - name: Create release
+        # Don't create release if we're not pushing a tag
+        if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags') }}
         uses: softprops/action-gh-release@aec2ec56f94eb8180ceec724245f64ef008b89f5 # v2.4.0
         with:
-          draft: true   # Setting release to draft to wait for the signed Firefox .xpi
           tag_name: ${{ github.ref_name }}
           fail_on_unmatched_files: true
           files: |
-            ./JankE-chromium.zip
-            ./JankE-firefox.xpi
+            ./src/janke.user.js
           name: ${{ github.ref_name }}

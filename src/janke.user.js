@@ -1,3 +1,19 @@
+// ==UserScript==
+// @name         JankE
+// @namespace    https://github.com/hugoarnal/janke
+// @version      v2.0.0
+// @description  Extension that adds Epitech specific features to Jenkins
+// @author       Hugo ARNAL (@hugoarnal)
+// @match        https://jenkins.epitest.eu/*
+// @icon         https://hugoschool.github.io/janke/icons/icon-128.png
+// @grant        none
+// @updateURL    https://hugoschool.github.io/janke/janke.user.js
+// @downloadURL  https://hugoschool.github.io/janke/janke.user.js
+// ==/UserScript==
+
+(function () {
+  "use strict";
+
 const GITHUB_LINK_REGEX = /(https?:\/\/)?github\.com\/(?<author>[\w-]+)\/(?<repo>[\w-]+)\/?(tree\/)?(?<branch>[\w-]+)?/gm;
 const GIT_REVISION_REGEX = /Delivery Revision: .*$/gm;
 
@@ -112,3 +128,5 @@ async function addGitHubButton() {
 }
 
 addGitHubButton();
+
+})();

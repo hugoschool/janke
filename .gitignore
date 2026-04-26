@@ -1,4 +1,1 @@
-*.zip
-*.xpi
-.amo-upload-uuid
-web-ext-artifacts
+build/
