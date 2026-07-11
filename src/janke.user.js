@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         JankE
-// @namespace    https://github.com/hugoarnal/janke
+// @namespace    https://github.com/hugoschool/janke
 // @version      v2.0.0
 // @description  Extension that adds Epitech specific features to Jenkins
 // @author       Hugo ARNAL (@hugoarnal)
