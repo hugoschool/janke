@@ -25,6 +25,10 @@ function getBuildHistory() {
     return document.getElementById("jenkins-build-history");
 }
 
+function getTasks() {
+    return document.querySelector("#tasks");
+}
+
 function waitForElem(selector) {
     return new Promise(resolve => {
         if (document.querySelector(selector)) {
@@ -46,7 +50,8 @@ function waitForElem(selector) {
     });
 }
 
-async function fetchFromGitHubLink(url) {
+// URL must end in consoleText
+async function fetchConsoleOutput(url) {
     const response = await fetch(url);
     const text = await response.text();
     return text;
@@ -57,11 +62,14 @@ function parseGitHubLink(content) {
 }
 
 function parseGitRevision(content) {
-    return GIT_REVISION_REGEX.exec(content)[0];
+    let revision = GIT_REVISION_REGEX.exec(content)[0];
+
+    revision = revision.replace("Delivery Revision: ", "");
+    return revision;
 }
 
 function createGitHubButton(githubLink) {
-    const TASKS = document.querySelector("#tasks");
+    const tasks = getTasks();
     const body = `<span class="task-link-wrapper ">
     <a href="${githubLink}" target="_blank" class="task-link task-link-no-confirm ">
     <span class="task-icon-link">
@@ -75,13 +83,11 @@ function createGitHubButton(githubLink) {
     taskDiv.className = "task";
     taskDiv.innerHTML = body;
 
-    TASKS.appendChild(taskDiv);
+    tasks.appendChild(taskDiv);
 }
 
 function createRevisionButton(githubLink, revision) {
-    revision = revision.replace("Delivery Revision: ", "");
-
-    const TASKS = document.querySelector("#tasks");
+    const tasks = getTasks();
     const link = githubLink ? `href="${githubLink}/commit/${revision}" target="_blank"` : "";
 
     const body = `<span class="task-link-wrapper ">
@@ -97,10 +103,10 @@ function createRevisionButton(githubLink, revision) {
     taskDiv.className = "task";
     taskDiv.innerHTML = body;
 
-    TASKS.appendChild(taskDiv);
+    tasks.appendChild(taskDiv);
 }
 
-async function addGitHubButton() {
+async function addGitButtons() {
     const buildHistory = getBuildHistory();
 
     if (!buildHistory)
@@ -109,7 +115,7 @@ async function addGitHubButton() {
     waitForElem("#jenkins-build-history > div > div > a").then((latestBuild) => {
         const consoleTextUrl = latestBuild.href + "Text";
 
-        fetchFromGitHubLink(consoleTextUrl).then((content) => {
+        fetchConsoleOutput(consoleTextUrl).then((content) => {
             let link = parseGitHubLink(content);
 
             if (link) {
@@ -124,9 +130,8 @@ async function addGitHubButton() {
         });
     });
     return;
-
 }
 
-addGitHubButton();
+addGitButtons();
 
 })();
