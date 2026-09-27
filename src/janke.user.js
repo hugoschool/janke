@@ -68,16 +68,22 @@ function parseGitRevision(content) {
     return revision;
 }
 
-function createGitHubButton(githubLink) {
-    const tasks = getTasks();
+function getTaskBody(link, image, content) {
     const body = `<span class="task-link-wrapper ">
-    <a href="${githubLink}" target="_blank" class="task-link task-link-no-confirm ">
+    <a href="${link}" target="_blank" class="task-link task-link-no-confirm ">
     <span class="task-icon-link">
-    <img src="${GITHUB_IMAGE}">
+    <img src="${image}">
     </span>
-    <span class="task-link-text">GitHub Link</span>
+    <span class="task-link-text" style="">${content}</span>
     </a>
     </span>`
+
+    return body;
+}
+
+function createGitHubButton(githubLink) {
+    const tasks = getTasks();
+    const body = getTaskBody(githubLink, GITHUB_IMAGE, "GitHub Link");
 
     const taskDiv = document.createElement("div");
     taskDiv.className = "task";
@@ -88,16 +94,9 @@ function createGitHubButton(githubLink) {
 
 function createRevisionButton(githubLink, revision) {
     const tasks = getTasks();
-    const link = githubLink ? `href="${githubLink}/commit/${revision}" target="_blank"` : "";
-
-    const body = `<span class="task-link-wrapper ">
-    <a ${link} class="task-link task-link-no-confirm ">
-    <span class="task-icon-link">
-    <img src="${GIT_BRANCH_IMAGE}">
-    </span>
-    <span class="task-link-text" style="">Hash: ${revision.slice(0, 7)}</span>
-    </a>
-    </span>`
+    const link = githubLink ? `${githubLink}/commit/${revision}` : "";
+    const content = `Hash: ${revision.slice(0, 7)}`;
+    const body = getTaskBody(link, GIT_BRANCH_IMAGE, content);
 
     const taskDiv = document.createElement("div");
     taskDiv.className = "task";
