@@ -25,6 +25,23 @@ function getBuildHistory() {
     return document.getElementById("jenkins-build-history");
 }
 
+function markTaskWithClassId(name, classId) {
+    const sideButtons = getTasks().querySelectorAll("a");
+
+    sideButtons.forEach((button) => {
+        const text = button.querySelector(".task-link-text");
+
+        if (text.innerText === name) {
+            button.classList.add(classId);
+        }
+    });
+}
+
+function getConsoleOutput() {
+    markTaskWithClassId("Console Output", "console-button");
+    return document.querySelector(".console-button");
+}
+
 function getTasks() {
     return document.querySelector("#tasks");
 }
@@ -105,32 +122,49 @@ function createRevisionButton(githubLink, revision) {
     tasks.appendChild(taskDiv);
 }
 
-async function addGitButtons() {
-    const buildHistory = getBuildHistory();
+function addGitButtons(url) {
+    let consoleOutputUrl = url;
 
-    if (!buildHistory)
-        return;
+    if (consoleOutputUrl.endsWith("/console")) {
+        consoleOutputUrl.replace("/console", "/consoleText");
+    }
 
-    waitForElem("#jenkins-build-history > div > div > a").then((latestBuild) => {
-        const consoleTextUrl = latestBuild.href + "Text";
+    fetchConsoleOutput(url).then((content) => {
+        let link = parseGitHubLink(content);
 
-        fetchConsoleOutput(consoleTextUrl).then((content) => {
-            let link = parseGitHubLink(content);
+        if (link) {
+            createGitHubButton(link);
+        }
 
-            if (link) {
-                createGitHubButton(link);
-            }
+        let revision = parseGitRevision(content);
 
-            let revision = parseGitRevision(content);
-
-            if (revision) {
-                createRevisionButton(link, revision);
-            }
-        });
+        if (revision) {
+            createRevisionButton(link, revision);
+        }
     });
-    return;
 }
 
-addGitButtons();
+function checkForGitButtons() {
+    // Means we're on the "overall" page of a project
+    // AKA the page with all the build history
+    const buildHistory = getBuildHistory();
+
+    if (buildHistory) {
+        waitForElem("#jenkins-build-history > div > div > a").then((latestBuild) => {
+            addGitButtons(latestBuild.href);
+        });
+        return;
+    }
+
+    // We're on a singular build
+    // (URL ending in /number/)
+    const consoleOutput = getConsoleOutput();
+
+    if (consoleOutput) {
+        addGitButtons(consoleOutput.href);
+    }
+}
+
+checkForGitButtons();
 
 })();
